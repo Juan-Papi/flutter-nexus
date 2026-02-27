@@ -1,4 +1,6 @@
-sealed class ProductEvent {
+import 'package:equatable/equatable.dart';
+
+sealed class ProductEvent extends Equatable {
   const ProductEvent();
 }
 
@@ -8,6 +10,9 @@ class LoadProducts extends ProductEvent {
 
   final int skip;
   final int limit;
+
+  @override
+  List<Object?> get props => [skip, limit];
 }
 
 /// Lanza una búsqueda por [query]. Si [query] está vacío, recarga la lista.
@@ -15,4 +20,7 @@ class SearchProducts extends ProductEvent {
   const SearchProducts(this.query);
 
   final String query;
+
+  @override
+  List<Object?> get props => [query];
 }

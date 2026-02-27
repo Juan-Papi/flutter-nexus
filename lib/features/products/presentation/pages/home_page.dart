@@ -6,9 +6,9 @@ import 'package:flutter_modular/flutter_modular.dart';
 
 import 'package:flutter_nexus/features/products/domain/entities/product.dart';
 import 'package:flutter_nexus/features/products/products_module.dart';
-import '../bloc/product_bloc.dart';
-import '../bloc/product_event.dart';
-import '../bloc/product_state.dart';
+import '../blocs/product_bloc/product_bloc.dart';
+import '../blocs/product_bloc/product_event.dart';
+import '../blocs/product_bloc/product_state.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});

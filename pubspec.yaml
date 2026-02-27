@@ -15,6 +15,7 @@ dependencies:
   fpdart: ^1.1.0
   # State Management
   flutter_bloc: ^9.1.1
+  equatable: ^2.0.7
   # DI & Routing
   flutter_modular: ^6.3.4
   # Local Persistence

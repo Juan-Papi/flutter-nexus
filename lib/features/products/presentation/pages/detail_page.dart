@@ -4,9 +4,9 @@ import 'package:flutter_modular/flutter_modular.dart';
 
 import 'package:flutter_nexus/features/products/domain/entities/product.dart';
 import 'package:flutter_nexus/features/products/products_module.dart';
-import '../bloc/product_detail_bloc.dart';
-import '../bloc/product_detail_event.dart';
-import '../bloc/product_detail_state.dart';
+import '../blocs/product_detail_bloc/product_detail_bloc.dart';
+import '../blocs/product_detail_bloc/product_detail_event.dart';
+import '../blocs/product_detail_bloc/product_detail_state.dart';
 
 class DetailPage extends StatelessWidget {
   const DetailPage({super.key, required this.productId});

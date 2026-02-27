@@ -11,8 +11,8 @@ import 'domain/usecases/get_product_detail_usecase.dart';
 import 'domain/usecases/get_products_usecase.dart';
 import 'domain/usecases/get_recent_products_usecase.dart';
 import 'domain/usecases/search_products_usecase.dart';
-import 'presentation/bloc/product_bloc.dart';
-import 'presentation/bloc/product_detail_bloc.dart';
+import 'presentation/blocs/product_bloc/product_bloc.dart';
+import 'presentation/blocs/product_detail_bloc/product_detail_bloc.dart';
 import 'presentation/pages/detail_page.dart';
 import 'presentation/pages/home_page.dart';
 

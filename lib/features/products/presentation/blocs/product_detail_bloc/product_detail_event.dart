@@ -1,4 +1,6 @@
-sealed class ProductDetailEvent {
+import 'package:equatable/equatable.dart';
+
+sealed class ProductDetailEvent extends Equatable {
   const ProductDetailEvent();
 }
 
@@ -7,4 +9,7 @@ class LoadProductDetail extends ProductDetailEvent {
   const LoadProductDetail(this.id);
 
   final int id;
+
+  @override
+  List<Object?> get props => [id];
 }
