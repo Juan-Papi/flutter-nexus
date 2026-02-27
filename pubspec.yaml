@@ -1,0 +1,36 @@
+name: flutter_nexus
+description: "A new Flutter project."
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: ^3.9.2
+
+dependencies:
+  flutter:
+    sdk: flutter
+  # HTTP
+  dio: ^5.8.0+1
+  # Functional Programming
+  fpdart: ^1.1.0
+  # State Management
+  flutter_bloc: ^9.1.1
+  # DI & Routing
+  flutter_modular: ^6.3.4
+  # Local Persistence
+  shared_preferences: ^2.5.2
+  # Code Generation (runtime annotations)
+  freezed_annotation: ^2.4.4
+  json_annotation: ^4.9.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+  # Code Generation
+  build_runner: ^2.4.14
+  freezed: ^2.5.7
+  json_serializable: ^6.9.3
+
+flutter:
+  uses-material-design: true
