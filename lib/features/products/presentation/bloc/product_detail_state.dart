@@ -23,8 +23,11 @@ class ProductDetailLoaded extends ProductDetailState {
   final List<Product> recentProducts;
 }
 
+/// Fallo al cargar el detalle (ej. sin red), pero con los recientes
+/// disponibles desde el caché local para seguir mostrándolos en la UI.
 class ProductDetailError extends ProductDetailState {
-  const ProductDetailError(this.message);
+  const ProductDetailError(this.message, {this.recentProducts = const []});
 
   final String message;
+  final List<Product> recentProducts;
 }

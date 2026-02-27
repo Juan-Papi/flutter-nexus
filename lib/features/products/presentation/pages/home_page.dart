@@ -121,6 +121,11 @@ class _ProductList extends StatelessWidget {
             itemCount: products.length,
             itemBuilder: (_, i) => _ProductTile(product: products[i]),
           ),
+        ProductOffline(:final recentProducts) => _OfflineView(
+            products: recentProducts,
+            onRetry: () =>
+                BlocProvider.of<ProductBloc>(context).add(const LoadProducts()),
+          ),
         ProductError(:final message) => Center(
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -132,6 +137,51 @@ class _ProductList extends StatelessWidget {
             ),
           ),
       },
+    );
+  }
+}
+
+// ─── Vista offline ────────────────────────────────────────────────────────────
+
+class _OfflineView extends StatelessWidget {
+  const _OfflineView({required this.products, required this.onRetry});
+
+  final List<Product> products;
+  final VoidCallback onRetry;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        ColoredBox(
+          color: Colors.orange.shade100,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            child: Row(
+              children: [
+                const Icon(Icons.wifi_off_rounded, size: 18, color: Colors.orange),
+                const SizedBox(width: 8),
+                const Expanded(
+                  child: Text(
+                    'Sin conexión · Últimos visitados',
+                    style: TextStyle(color: Colors.orange),
+                  ),
+                ),
+                TextButton(
+                  onPressed: onRetry,
+                  child: const Text('Reintentar'),
+                ),
+              ],
+            ),
+          ),
+        ),
+        Expanded(
+          child: ListView.builder(
+            itemCount: products.length,
+            itemBuilder: (_, i) => _ProductTile(product: products[i]),
+          ),
+        ),
+      ],
     );
   }
 }

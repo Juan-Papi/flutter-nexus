@@ -58,6 +58,7 @@ class ProductModule extends Module {
       () => ProductBloc(
         getProductsUseCase: i.get<GetProductsUseCase>(),
         searchProductsUseCase: i.get<SearchProductsUseCase>(),
+        getRecentProductsUseCase: i.get<GetRecentProductsUseCase>(),
       ),
     );
     i.add<ProductDetailBloc>(

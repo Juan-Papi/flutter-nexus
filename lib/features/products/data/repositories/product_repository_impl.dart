@@ -50,6 +50,9 @@ class ProductRepositoryImpl implements ProductRepository {
       await _local.cacheProduct(product);
       return Right(product);
     } on DioException catch (e) {
+      // Sin red → intentar desde caché antes de retornar failure
+      final cached = await _local.getCachedProduct(id);
+      if (cached != null) return Right(cached);
       return Left(_dioToFailure(e));
     } on Exception catch (e) {
       // Cualquier fallo al persistir en caché se reporta como CacheFailure

@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_nexus/core/usecases/usecase.dart';
+import 'package:flutter_nexus/features/products/domain/entities/product.dart';
 import 'package:flutter_nexus/features/products/domain/usecases/get_product_detail_usecase.dart';
 import 'package:flutter_nexus/features/products/domain/usecases/get_recent_products_usecase.dart';
 
@@ -20,9 +21,11 @@ class ProductDetailBloc
   final GetProductDetailUseCase _getProductDetail;
   final GetRecentProductsUseCase _getRecentProducts;
 
-  /// 1. Obtiene el detalle del producto (que internamente guarda en caché).
-  /// 2. Con el caché ya actualizado, carga el historial de recientes.
-  /// 3. Emite un único [ProductDetailLoaded] con ambos datos.
+  /// 1. Obtiene el detalle del producto (internamente guarda en caché si hay red).
+  /// 2. Siempre carga el historial de recientes desde el caché local.
+  /// 3a. Si el detalle tuvo éxito → emite [ProductDetailLoaded] con ambos.
+  /// 3b. Si el detalle falló (ej. sin red) → emite [ProductDetailError] con
+  ///     el mensaje de error Y los recientes disponibles en caché.
   Future<void> _onLoadProductDetail(
     LoadProductDetail event,
     Emitter<ProductDetailState> emit,
@@ -30,18 +33,17 @@ class ProductDetailBloc
     emit(const ProductDetailLoading());
 
     final detailResult = await _getProductDetail(event.id);
+    // Los recientes se leen del LocalDataSource: no dependen de la red.
+    final recentsResult = await _getRecentProducts(const NoParams());
+    final recent = recentsResult.fold((_) => <Product>[], (r) => r);
 
-    await detailResult.fold(
-      (failure) async => emit(ProductDetailError(failure.message)),
-      (product) async {
-        final recentsResult = await _getRecentProducts(const NoParams());
-        recentsResult.fold(
-          (_) => emit(ProductDetailLoaded(product: product)),
-          (recent) => emit(
-            ProductDetailLoaded(product: product, recentProducts: recent),
-          ),
-        );
-      },
+    detailResult.fold(
+      (failure) => emit(
+        ProductDetailError(failure.message, recentProducts: recent),
+      ),
+      (product) => emit(
+        ProductDetailLoaded(product: product, recentProducts: recent),
+      ),
     );
   }
 }

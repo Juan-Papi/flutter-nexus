@@ -23,3 +23,10 @@ class ProductError extends ProductState {
 
   final String message;
 }
+
+/// Red no disponible pero hay productos en caché para mostrar.
+class ProductOffline extends ProductState {
+  const ProductOffline(this.recentProducts);
+
+  final List<Product> recentProducts;
+}

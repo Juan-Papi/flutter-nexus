@@ -12,6 +12,9 @@ abstract interface class ProductLocalDataSource {
 
   /// Retorna los últimos productos visitados (máx. 5), del más reciente al más antiguo.
   Future<List<ProductModel>> getRecentProducts();
+
+  /// Retorna el producto con [id] si está en caché, o null si no existe.
+  Future<ProductModel?> getCachedProduct(int id);
 }
 
 class ProductLocalDataSourceImpl implements ProductLocalDataSource {
@@ -52,5 +55,15 @@ class ProductLocalDataSourceImpl implements ProductLocalDataSource {
     return raw
         .map((e) => ProductModel.fromJson(jsonDecode(e) as Map<String, dynamic>))
         .toList();
+  }
+
+  @override
+  Future<ProductModel?> getCachedProduct(int id) async {
+    final products = await getRecentProducts();
+    try {
+      return products.firstWhere((p) => p.id == id);
+    } on StateError {
+      return null;
+    }
   }
 }

@@ -30,17 +30,8 @@ class DetailPage extends StatelessWidget {
               const Center(child: CircularProgressIndicator()),
             ProductDetailLoaded(:final product, :final recentProducts) =>
               _DetailBody(product: product, recentProducts: recentProducts),
-            ProductDetailError(:final message) => Center(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Icon(Icons.error_outline,
-                        size: 48, color: Colors.redAccent),
-                    const SizedBox(height: 8),
-                    Text(message, textAlign: TextAlign.center),
-                  ],
-                ),
-              ),
+            ProductDetailError(:final message, :final recentProducts) =>
+              _ErrorBody(message: message, recentProducts: recentProducts),
           },
         ),
       ),
@@ -156,64 +147,115 @@ class _DetailBody extends StatelessWidget {
           const SizedBox(height: 8),
           Text(product.description),
 
-          // ── Historial reciente ──────────────────────────────────────────────
-          if (recentProducts.isNotEmpty) ...[
-            const Divider(height: 24),
-            Text(
-              'Vistos recientemente',
-              style: theme.textTheme.titleMedium
-                  ?.copyWith(fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 8),
-            SizedBox(
-              height: 108,
-              child: ListView.separated(
-                scrollDirection: Axis.horizontal,
-                itemCount: recentProducts.length,
-                separatorBuilder: (_, __) => const SizedBox(width: 8),
-                itemBuilder: (context, index) {
-                  final recent = recentProducts[index];
-                  return GestureDetector(
-                    onTap: () => Modular.to.pushNamed(
-                      ProductModule.detail,
-                      arguments: recent.id,
-                    ),
-                    child: SizedBox(
-                      width: 80,
-                      child: Column(
-                        children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(8),
-                            child: Image.network(
-                              recent.thumbnail,
-                              width: 72,
-                              height: 72,
-                              fit: BoxFit.cover,
-                              errorBuilder: (_, __, ___) => const Icon(
-                                  Icons.image_not_supported,
-                                  size: 40),
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            recent.title,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(fontSize: 10),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
-          ],
+          if (recentProducts.isNotEmpty)
+            _RecentProductsSection(recentProducts: recentProducts),
 
           const SizedBox(height: 16),
         ],
       ),
+    );
+  }
+}
+
+// ─── Error con recientes ──────────────────────────────────────────────────────
+
+class _ErrorBody extends StatelessWidget {
+  const _ErrorBody({required this.message, required this.recentProducts});
+
+  final String message;
+  final List<Product> recentProducts;
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(height: 32),
+          Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(Icons.wifi_off, size: 48, color: Colors.redAccent),
+                const SizedBox(height: 8),
+                Text(message, textAlign: TextAlign.center),
+              ],
+            ),
+          ),
+          if (recentProducts.isNotEmpty)
+            _RecentProductsSection(recentProducts: recentProducts),
+        ],
+      ),
+    );
+  }
+}
+
+// ─── Sección de recientes reutilizable ───────────────────────────────────────
+
+class _RecentProductsSection extends StatelessWidget {
+  const _RecentProductsSection({required this.recentProducts});
+
+  final List<Product> recentProducts;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Divider(height: 24),
+        Text(
+          'Vistos recientemente',
+          style: theme.textTheme.titleMedium
+              ?.copyWith(fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 8),
+        SizedBox(
+          height: 108,
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            itemCount: recentProducts.length,
+            separatorBuilder: (_, __) => const SizedBox(width: 8),
+            itemBuilder: (context, index) {
+              final recent = recentProducts[index];
+              return GestureDetector(
+                onTap: () => Modular.to.pushNamed(
+                  ProductModule.detail,
+                  arguments: recent.id,
+                ),
+                child: SizedBox(
+                  width: 80,
+                  child: Column(
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: Image.network(
+                          recent.thumbnail,
+                          width: 72,
+                          height: 72,
+                          fit: BoxFit.cover,
+                          errorBuilder: (_, __, ___) => const Icon(
+                              Icons.image_not_supported,
+                              size: 40),
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        recent.title,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(fontSize: 10),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+      ],
     );
   }
 }
